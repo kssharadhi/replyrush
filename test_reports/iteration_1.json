@@ -1,0 +1,46 @@
+{
+  "summary": "First test run for ReplyRush MVP. Backend: 18/20 pytest cases pass. Frontend: full happy-path works with localStorage rr_token auth (Landing, Dashboard analytics/urgency chips/Issue Radar/5 platform cards, Connect flow with sorted cards, Reply Studio generate producing on-topic reply, History with filters). One CRITICAL backend bug: /api/issue-radar/theme/{theme} returns 404 for any theme that contains a '/' (Delivery/Wait time, Staff/Service, Refund/Billing, Cleanliness/Environment) because FastAPI does not accept encoded %2F in a path parameter. This breaks the Theme Drawer's suggested_action for 4 of 8 themes (confirmed visually - drawer opens but suggested-action never renders and browser network shows 404). Language matching (ES/FR) and honesty rule (no invented refund/contact/discount) verified on the LLM output.",
+  "backend_issues": {
+    "critical": [
+      {"endpoint": "GET /api/issue-radar/theme/{theme}", "issue": "Returns 404 for themes containing '/', e.g. 'Delivery/Wait time', 'Staff/Service', 'Refund/Billing', 'Cleanliness/Environment'. Starlette treats %2F as literal '/' in routing so the path parameter never matches. Confirmed both locally on :8001 and via ingress. Frontend ThemeDrawer calls encodeURIComponent(theme) and gets 404 for 4/8 themes. Fix options: (a) change route to Query param, e.g. GET /api/issue-radar/theme?theme=... ; (b) accept the theme as path:path with a custom converter; (c) URL-safe-encode themes on the client (e.g. replace '/' with '__slash__' both sides).", "priority": "CRITICAL"}
+    ],
+    "minor": [
+      {"endpoint": "POST /api/reviews/{id}/generate (regenerate)", "issue": "Intermittently returned a non-JSON body on the immediate 2nd call in the same second (observed 1x during parallel pytest run). Retry immediately succeeded via curl and playwright. Likely a transient LLM/proxy hiccup, not a code bug. Add a simple 502 retry or defensive JSON parse if this recurs."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [
+      {"component": "ThemeDrawer", "issue": "Drawer opens but 'theme-suggested-action' never renders because backend returns 404 for slash-containing themes. Also drawer shows blank body (no reviews list, no action). Root cause is backend routing; frontend also needs an empty/error state.", "selector": "[data-testid=\"theme-drawer\"]", "priority": "HIGH"},
+      {"component": "AnalyticsWidget (Recharts donut)", "issue": "Console warning: 'The width(-1) and height(-1) of chart should be greater than 0'. Chart still renders after resize but signals a missing min-height on the ResponsiveContainer.", "selector": "[data-testid=\"analytics-widget\"]", "priority": "LOW"},
+      {"component": "ThemeDrawer DialogContent", "issue": "React a11y warning: 'Missing Description or aria-describedby={undefined} for DialogContent'.", "selector": "[data-testid=\"theme-drawer\"]", "priority": "LOW"}
+    ],
+    "integration_issues": [
+      {"flow": "Issue Radar theme drilldown", "issue": "Click radar-theme-Delivery-Wait-time -> API GET /api/issue-radar/theme/Delivery%2FWait%20time -> 404 -> drawer body empty.", "affected_selectors": ["[data-testid=\"theme-drawer\"]", "[data-testid=\"theme-suggested-action\"]"]}
+    ],
+    "design_issues": [
+      {"screen": "Landing", "issues": ["Hero, 3-step visual, Get Started and Sign In all present and render cleanly."]}
+    ]
+  },
+  "test_report_links": ["/app/backend/tests/backend_test.py", "/app/test_reports/pytest/pytest_results.xml"],
+  "action_items": [
+    "MUST FIX: Move theme drilldown off a path param (recommend GET /api/issue-radar/theme?theme=... using Query) so themes with '/' work. Update ThemeDrawer.jsx to call the new signature.",
+    "Consider a defensive retry / friendlier 502 handling in /api/reviews/{id}/generate.",
+    "Add empty/error state in ThemeDrawer when the API errors.",
+    "Fix Recharts ResponsiveContainer min-height and add DialogContent aria-describedby to silence warnings."
+  ],
+  "critical_code_review_comments": [
+    "server.py: `@api_router.get('/issue-radar/theme/{theme}')` cannot handle canonical themes with '/'. Use Query or a custom Starlette route with the `:path` converter, OR normalise theme slugs.",
+    "server.py: honesty prompt is well-written; suggest also blocking currency amounts not present in review (currently model behaved but this is prompt-only enforcement).",
+    "seed_data.py: Instagram reviews use `@handle` names but rating is 1-5 stars — okay for now but note Instagram has no star system in reality (design choice, not a bug).",
+    "server.py L165 `async def _serialize` uses `Review_out` capitalised — a helper function shouldn't use PascalCase; minor style.",
+    "server.py: cache_key for theme_actions uses `f'{theme}:{len(matching)}'` — cache can go stale if reviews change but count is same. Consider hashing matching ids."
+  ],
+  "updated_files": ["/app/backend/tests/backend_test.py"],
+  "success_rate": {"backend": "90% (18/20)", "frontend": "85% (core flows OK; theme drawer broken due to backend bug)"},
+  "test_credentials": "session_token=test_session_replyrush (Bearer or cookie); localStorage key 'rr_token' for browser tests; user owner@replyrush.test / user_testreplyrush. Recreation snippet in /app/memory/test_credentials.md verified working.",
+  "seed_data_creation": "Re-seeded test user + session via mongosh; deleted prior reviews/theme_actions for user_testreplyrush before tests. Backend seeds 25 reviews on demand via POST /api/connect/*. Extra manual TEST_ review created during test_manual_review_flow (not cleaned up - safe, prefixed).",
+  "retest_needed": true,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend tests live at /app/backend/tests/backend_test.py and run via `pytest backend/tests/backend_test.py -v --junitxml=/app/test_reports/pytest/pytest_results.xml`. Before running, reset per-user state: mongosh 'use(test_database); db.reviews.deleteMany({user_id:\"user_testreplyrush\"}); db.theme_actions.deleteMany({user_id:\"user_testreplyrush\"});'. For frontend, localStorage 'rr_token'='test_session_replyrush' before goto works reliably. After main agent fixes the theme route, re-run test_theme_detail_with_llm_action and re-verify Theme Drawer in browser.",
+  "rca of the issue": "FastAPI/Starlette resolves path params by splitting on '/'. Percent-encoded %2F in the request path is preserved as literal '/' during routing, so `/api/issue-radar/theme/Delivery%2FWait%20time` never matches `/issue-radar/theme/{theme}`. Reproduction: `curl http://localhost:8001/api/issue-radar/theme/Delivery%2FWait%20time -H 'Authorization: Bearer test_session_replyrush'` -> {\"detail\":\"Not Found\"}. Themes without '/' (e.g. 'Other') return 200. Mitigation: switch to Query param `?theme=` OR use `path:` converter OR slugify themes."
+}

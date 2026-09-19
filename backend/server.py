@@ -343,9 +343,12 @@ async def generate_reply(review_id: str, payload: GenerateInput, user: User = De
 
     try:
         data = await _call_llm_reply(review, payload)
-    except Exception as e:
-        logger.exception("LLM generation failed")
-        raise HTTPException(status_code=502, detail=f"Reply generation failed: {e}")
+    except Exception:
+        try:
+            data = await _call_llm_reply(review, payload)
+        except Exception as e:
+            logger.exception("LLM generation failed")
+            raise HTTPException(status_code=502, detail=f"Reply generation failed: {e}")
 
     update = {
         "reply": data.get("reply", "").strip(),
@@ -472,8 +475,8 @@ def _join_platforms(names: List[str]) -> str:
     return ", ".join(names[:-1]) + f" and {names[-1]}"
 
 
-@api_router.get("/issue-radar/theme/{theme}")
-async def theme_detail(theme: str, user: User = Depends(get_current_user)):
+@api_router.get("/issue-radar/theme")
+async def theme_detail(theme: str = Query(...), user: User = Depends(get_current_user)):
     now = datetime.now(timezone.utc)
     cur_start = now - timedelta(days=30)
     reviews = await db.reviews.find({"user_id": user.user_id}, {"_id": 0}).to_list(2000)

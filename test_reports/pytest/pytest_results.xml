@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="20" time="28.075" timestamp="2026-09-19T11:26:59.896467+00:00" hostname="agent-env-964fe081-9f98-4c64-b119-e1d21c8235cd"><testcase classname="tests.backend_test" name="test_auth_me" time="0.233" /><testcase classname="tests.backend_test" name="test_auth_me_unauthorized" time="0.113" /><testcase classname="tests.backend_test" name="test_connect_seeds_5_and_sorted[google]" time="0.062" /><testcase classname="tests.backend_test" name="test_connect_seeds_5_and_sorted[zomato]" time="0.063" /><testcase classname="tests.backend_test" name="test_connect_seeds_5_and_sorted[amazon]" time="0.065" /><testcase classname="tests.backend_test" name="test_connect_seeds_5_and_sorted[yelp]" time="0.062" /><testcase classname="tests.backend_test" name="test_connect_seeds_5_and_sorted[instagram]" time="0.059" /><testcase classname="tests.backend_test" name="test_connect_idempotent" time="0.059" /><testcase classname="tests.backend_test" name="test_connect_unknown_platform" time="0.058" /><testcase classname="tests.backend_test" name="test_total_25_and_language_and_reds" time="0.059" /><testcase classname="tests.backend_test" name="test_analytics_counts" time="0.057" /><testcase classname="tests.backend_test" name="test_issue_radar_and_alert" time="0.059" /><testcase classname="tests.backend_test" name="test_theme_detail_with_llm_action" time="0.060"><failure message="assert 404 == 200&#10; +  where 404 = &lt;Response [404]&gt;.status_code">backend/tests/backend_test.py:118: in test_theme_detail_with_llm_action
+    assert r.status_code == 200
+E   assert 404 == 200
+E    +  where 404 = &lt;Response [404]&gt;.status_code</failure></testcase><testcase classname="tests.backend_test" name="test_generate_english_no_offer_honesty" time="4.843" /><testcase classname="tests.backend_test" name="test_generate_spanish_language_match" time="2.907" /><testcase classname="tests.backend_test" name="test_generate_french_language_match" time="5.067" /><testcase classname="tests.backend_test" name="test_generate_with_offer_allows_that_offer" time="4.427" /><testcase classname="tests.backend_test" name="test_regenerate_produces_different_text" time="4.998"><failure message="requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)">/root/.venv/lib/python3.11/site-packages/requests/models.py:1116: in json
+    return complexjson.loads(self.text, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/decoder.py:337: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/local/lib/python3.11/json/decoder.py:355: in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+E   json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+During handling of the above exception, another exception occurred:
+backend/tests/backend_test.py:198: in test_regenerate_produces_different_text
+    r2 = api.post(f"{BASE_URL}/api/reviews/{target['id']}/generate", json=payload).json()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/root/.venv/lib/python3.11/site-packages/requests/models.py:1120: in json
+    raise RequestsJSONDecodeError(e.msg, e.doc, e.pos)
+E   requests.exceptions.JSONDecodeError: Expecting value: line 1 column 1 (char 0)</failure></testcase><testcase classname="tests.backend_test" name="test_manual_review_flow" time="3.948" /><testcase classname="tests.backend_test" name="test_history_filters" time="0.175" /></testsuite></testsuites>

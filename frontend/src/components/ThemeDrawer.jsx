@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lightbulb, Loader2 } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import ReviewCard from "@/components/ReviewCard";
 import api from "@/lib/api";
 
@@ -15,9 +15,9 @@ const ThemeDrawer = ({ theme, open, onOpenChange }) => {
     setLoading(true);
     setData(null);
     api
-      .get(`/issue-radar/theme/${encodeURIComponent(theme)}`)
+      .get(`/issue-radar/theme`, { params: { theme } })
       .then((res) => setData(res.data))
-      .catch(() => setData(null))
+      .catch(() => setData({ error: true, reviews: [], suggested_action: "" }))
       .finally(() => setLoading(false));
   }, [open, theme]);
 
@@ -26,11 +26,16 @@ const ThemeDrawer = ({ theme, open, onOpenChange }) => {
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto" data-testid="theme-drawer">
         <SheetHeader>
           <SheetTitle className="font-display text-2xl">{theme}</SheetTitle>
+          <SheetDescription className="sr-only">Reviews and a suggested action for the {theme} theme</SheetDescription>
         </SheetHeader>
 
         {loading ? (
           <div className="mt-8 flex items-center justify-center gap-2 text-slate-400">
             <Loader2 className="animate-spin" size={18} /> Analysing this theme…
+          </div>
+        ) : data && data.error ? (
+          <div className="mt-8 text-center text-sm text-slate-400" data-testid="theme-drawer-error">
+            Couldn't load this theme right now. Please try again.
           </div>
         ) : data ? (
           <div className="mt-5 space-y-5">
