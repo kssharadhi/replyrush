@@ -3,138 +3,155 @@
 **AI-powered review and complaint reply assistant for small local businesses.**
 Never leave a review unanswered again.
 
-ReplyRush reads what a customer actually wrote, drafts a specific and honest reply in seconds, and shows the owner which problems keep repeating across platforms.
-
 ---
 
 ## Problem
 
-Small business owners receive reviews and complaints on Google, Zomato, Amazon, Yelp and Instagram, but rarely have time to answer each one personally.
+Small business owners receive reviews and complaints across many platforms (Google, Zomato, Amazon, Yelp, Instagram), but they rarely have time to answer each one personally. Unanswered negative reviews hurt trust, and generic copy-pasted replies make it worse.
 
-- Unanswered negative reviews damage trust with future customers.
-- Copy-pasted templates ("we're sorry for the inconvenience") make things worse because customers can tell nobody read their review.
-- Feedback is scattered across platforms, so recurring problems (slow delivery, rude staff) go unnoticed until they hurt revenue.
-- Generic AI writing tools tend to invent refunds, discounts and promises the owner never approved, which creates real liability.
+Owners also miss the bigger picture. Ten separate complaints about slow delivery look like ten unrelated comments, when they are really one operational problem.
 
 ## Solution
 
-ReplyRush gives owners one place to handle feedback from every platform.
+ReplyRush drafts fast, personal replies that respond to what each customer actually wrote, and it shows the owner which problems keep coming back.
 
-1. **Connect** a platform and see its reviews, with the most urgent ones first.
-2. **Generate** a reply written from the actual review text, in the tone and business context the owner chooses.
-3. **Edit and copy** the draft, then paste it wherever the review lives.
-4. **Watch Issue Radar** to spot complaint themes that keep repeating and get one suggested action for each.
-
-The reply engine follows a strict honesty rule. It never invents refunds, compensation, policies, staff actions, discounts, resolutions, contact details or promises. The only resolutions it may mention are those the owner types into the "What can you actually offer?" field. If the owner offers nothing, the reply acknowledges the specific issue and invites the customer to get in touch, without making anything up.
-
-ReplyRush **drafts replies only**. It never posts to any platform.
+1. **Connect** a platform and see its reviews in one place, sorted by urgency.
+2. **Generate** a reply written for that specific review, in the tone and business type the owner chooses.
+3. **Copy** the edited reply and post it wherever it belongs. ReplyRush drafts only and never posts on the owner's behalf.
+4. **Spot patterns** with Issue Radar, which groups reviews into themes and warns the owner when a problem is repeating.
 
 ## Features
 
-**Reply generation**
-- One real LLM call per reply, returning the reply text, sentiment, urgency flag, urgency reason and 1-3 themes as structured JSON.
-- Replies reference specifics from the review (the dish, the delay, the product defect, the staff behaviour) and vary in structure and wording every time.
-- Replies come back in the same language as the review, and the seed data includes Spanish and French examples.
-- Business type (Restaurant, Retail Store, Salon, Service Business, Other) shapes vocabulary.
-- Tone selector: Friendly, Formal, or Apologetic-and-solution-focused.
-- Editable draft, one-click Copy Reply, and Regenerate for a different version.
-- Length target of roughly 50-120 words, suited to public platforms.
+**Sign-in**
+- Google sign-in with the account chooser, so the user picks which Google account to use.
+- All reviews, replies and history are stored per user and persist across sessions.
+
+**Reviews**
+- Five platform cards (Google, Zomato, Amazon, Yelp, Instagram) with brand logos and a Connect button.
+- Connect shows a short loading animation, then loads that platform's sample reviews, styled per platform.
+- 25 seeded sample reviews (5 per platform): a mix of positive, neutral and negative, including one Spanish and one French review.
+- "Add Review Manually" to paste any real review or complaint from anywhere.
 
 **Urgency flags**
-- Red: angry, urgent, or threatening to leave, report or escalate.
-- Yellow: moderately negative.
-- Green: neutral or positive.
-- Lists always sort red first, then yellow, then green.
+- Red = angry, urgent, or threatening to leave or report the business.
+- Yellow = moderately negative.
+- Green = neutral or positive.
+- Every list is sorted with red first, then yellow, then green.
+
+**Reply Studio**
+- Business type: Restaurant, Retail Store, Salon, Service Business, Other.
+- Tone: Friendly, Formal, Apologetic-and-solution-focused.
+- Optional field, "What can you actually offer?", where the owner enters real refunds, replacements, contact details or policies.
+- Generates a unique reply each time, in the same language as the review (roughly 50 to 120 words).
+- Editable reply box, Copy Reply button, and Regenerate.
+
+**Honesty rule**
+- The AI never invents facts, refunds, compensation, policies, staff actions, discounts, resolutions or promises. It only mentions resolutions that appear in the review or in the owner's "What can you actually offer?" field.
+- When there is not enough information to promise anything, it acknowledges the specific issue and invites the customer to get in touch, without making up contact details.
 
 **Issue Radar**
-- Every review carries 1-3 themes from a fixed set: Product quality, Delivery/Wait time, Staff/Service, Pricing/Value, Cleanliness/Environment, Order accuracy, Refund/Billing, Other.
-- Dashboard bars show each theme's count for the last 30 days, split by platform logo, with a trend arrow against the previous 30 days.
-- A pulsing "Needs attention" banner appears when a theme has 3 or more negative reviews or 2 or more red flags.
-- Clicking a theme opens a drawer with the matching reviews and one "Suggested action", grounded only in those reviews and cached until new reviews arrive.
+- Every review carries one to three themes: Product quality, Delivery/Wait time, Staff/Service, Pricing/Value, Cleanliness/Environment, Order accuracy, Refund/Billing, Other.
+- Over the last 30 days, each theme is shown as a bar with its count, split by platform logo, with a trend arrow against the previous 30 days.
+- A pulsing "Needs attention" banner appears when a theme has 3 or more negative reviews, or 2 or more red flags.
+- Clicking a theme opens a side drawer with the matching reviews and one suggested action, based only on those reviews.
 
-**Dashboard and workflow**
-- Analytics: total reviews handled, positive vs negative split (donut chart), estimated time saved (5 minutes per reply), and animated counters.
-- Platform cards for Google, Zomato, Amazon, Yelp and Instagram, each with its real brand icon.
-- Simulated Connect flow with a loading animation, then platform-styled review cards.
-- Add Review Manually, so owners can paste a review from anywhere.
-- History page listing every handled review with platform logo, flag colour, reply and date, filterable by platform and flag.
-- Google sign-in with account chooser, per-user data, and a responsive interface with animated landing and login pages.
+**Dashboard and history**
+- Analytics: total reviews, positive vs negative split (donut chart), and estimated time saved (5 minutes per reply).
+- Red / Yellow / Green count chips.
+- History page listing every handled review with its platform logo, flag, reply and date, filterable by platform and flag.
+- Responsive layout with animated counters, skeleton loaders and toast notifications.
 
 ## Architecture
 
-```mermaid
-flowchart LR
-    U[Browser: React SPA] -->|REST /api, session cookie| B[FastAPI backend]
-    B -->|Motor| M[(MongoDB)]
-    B -->|Structured prompts| L[LLM: Claude Sonnet 4.6]
-    U -->|Sign in with Google| A[Managed OAuth service]
-    A -->|Redirect with session_id| U
-    B -->|Validate session_id| A
+```
+┌───────────────────────┐      HTTPS / JSON       ┌────────────────────────┐
+│  React frontend       │ ──────────────────────► │  FastAPI backend       │
+│  (routing, UI, charts)│ ◄────────────────────── │  (all routes under     │
+└───────────────────────┘   cookie or Bearer      │   /api)                │
+                            session token         └───────┬────────┬───────┘
+                                                          │        │
+                                              Motor (async)        │ one structured-JSON
+                                                          │        │ call per reply,
+                                                  ┌───────▼──────┐ │ one cached call per
+                                                  │   MongoDB    │ │ theme suggestion
+                                                  │ users        │ │
+                                                  │ user_sessions│ ┌▼────────────────┐
+                                                  │ reviews      │ │ LLM             │
+                                                  │ theme_actions│ │ (Claude Sonnet) │
+                                                  └──────────────┘ └─────────────────┘
 ```
 
-**Flow overview**
+**How the main flows work**
 
-1. **Sign-in.** The frontend redirects to a managed Google OAuth service with `prompt=select_account`. The user returns with a `session_id`, which the backend validates. The backend then creates a 7-day session and sets an httpOnly cookie.
-2. **Connect.** `POST /api/connect/{platform}` copies that platform's pre-tagged seed reviews into the user's account (once only) and returns them sorted by urgency. No LLM call happens here.
-3. **Generate.** `POST /api/reviews/{id}/generate` sends the review, business type, tone and owner-provided offer to the LLM. It returns JSON, which is parsed and stored. Seeded reviews keep their pre-set flag and themes. Manually added reviews are tagged by this same call.
-4. **Radar.** `GET /api/issue-radar` aggregates themes over rolling 30-day windows. `GET /api/issue-radar/theme` returns matching reviews plus a cached suggested action.
+- **Sign-in:** the frontend redirects to a hosted Google OAuth service with `prompt=select_account`. It returns to the app with a `session_id`, which the backend exchanges for user details. The backend then creates a 7-day session and sets an httpOnly cookie. The API also accepts an `Authorization: Bearer` token.
+- **Connect:** `POST /api/connect/{platform}` copies that platform's seeded reviews into the database for the current user (only once, so repeated clicks are safe) and returns them sorted by urgency. No AI call is made, because seeded reviews are already tagged with flags and themes.
+- **Generate Reply:** `POST /api/reviews/{id}/generate` builds a system prompt from the business type, tone and the owner's offer field, sends the review text to the LLM, and expects strict JSON back (`reply`, `sentiment`, `flag`, `urgency_reason`, `themes`). It retries once on failure. Seeded reviews keep their preset flag and themes. Manually added reviews are tagged from the LLM result.
+- **Issue Radar:** `GET /api/issue-radar` aggregates themes over the last 30 days against the 30 days before, and produces the alert list. `GET /api/issue-radar/theme?theme=...` returns the matching reviews and one suggested action. That action is cached per theme and review count, and the cache is cleared whenever new reviews arrive or a reply is generated.
 
-**API routes** (all under `/api`)
+**API routes**
 
-| Route | Purpose |
-|---|---|
-| `POST /auth/session`, `GET /auth/me`, `POST /auth/logout` | Session handling |
-| `GET /platforms/status` | Connection state and review count per platform |
-| `POST /connect/{platform}` | Simulated connect, returns seeded reviews |
-| `GET /reviews`, `GET /reviews/{id}` | List (filter by platform, flag, handled) and fetch |
-| `POST /reviews/manual` | Add a pasted review |
-| `POST /reviews/{id}/generate` | Generate and store a reply |
-| `GET /analytics` | Dashboard totals |
-| `GET /issue-radar`, `GET /issue-radar/theme` | Theme aggregation and drill-down |
-
-**Data model (MongoDB collections):** `users`, `user_sessions`, `reviews` (platform, rating, text, flag, sentiment, themes, language, reply, handled, source), and `theme_actions` (cached suggested actions). Every query is scoped by `user_id`, so users never see each other's data.
+| Method | Route | Purpose |
+|---|---|---|
+| POST | `/api/auth/session` | Exchange the OAuth session for an app session |
+| GET | `/api/auth/me` | Current user |
+| POST | `/api/auth/logout` | End session |
+| GET | `/api/platforms/status` | Connection state and review count per platform |
+| POST | `/api/connect/{platform}` | Load seeded reviews for a platform |
+| GET | `/api/reviews` | List reviews (filter by platform, flag, handled) |
+| GET | `/api/reviews/{id}` | Single review |
+| POST | `/api/reviews/manual` | Add a review by hand |
+| POST | `/api/reviews/{id}/generate` | Generate a reply and classify the review |
+| GET | `/api/analytics` | Totals, sentiment split, time saved |
+| GET | `/api/issue-radar` | Theme counts, trends and alerts |
+| GET | `/api/issue-radar/theme` | Theme drawer data and suggested action |
 
 **Project structure**
 
 ```
 backend/
-  server.py        FastAPI app, auth, reviews, LLM calls, analytics, radar
+  server.py        FastAPI app, auth, reviews, LLM calls, analytics, Issue Radar
   seed_data.py     25 pre-tagged sample reviews
   tests/           Backend API tests (pytest)
 frontend/
   src/pages/       Landing, Login, Dashboard, ConnectView, ReplyStudio, History
   src/components/  IssueRadar, ThemeDrawer, AnalyticsWidget, ReviewCard, PlatformCard, ...
-  src/lib/         API client and platform brand config
+  src/lib/         API client, platform and urgency definitions
 ```
 
 ## Tech Stack
 
 | Layer | Technology |
 |---|---|
-| Frontend | React 19, React Router, Tailwind CSS, shadcn/ui, framer-motion, Recharts, Sonner (toasts) |
-| Icons | react-icons (Simple Icons set and Font Awesome for platform brands, FcGoogle for sign-in) |
-| Backend | Python, FastAPI, Uvicorn, Pydantic |
-| Database | MongoDB via Motor (async driver) |
-| Auth | Google OAuth through a managed OAuth service, httpOnly session cookies |
-| AI | Anthropic Claude Sonnet 4.6, accessed through a managed LLM integration library (see `backend/requirements.txt`) |
-| Testing | pytest (backend API tests) |
+| Frontend | React 19, React Router, Tailwind CSS, shadcn/ui, Framer Motion, Recharts, Sonner (toasts) |
+| Icons | react-icons (Simple Icons brand logos, Font Awesome Amazon logo, Google multi-color "G") |
+| Backend | Python, FastAPI, Uvicorn |
+| Database | MongoDB, accessed through Motor (async driver) |
+| AI | Claude Sonnet 4.6, structured JSON output |
+| Auth | Google OAuth with account chooser, httpOnly session cookie |
+| Testing | pytest |
 
 ## How to Run
 
 ### Prerequisites
 
-- Python 3.11 or newer
-- Node.js 18 or newer and Yarn
-- A running MongoDB instance
-- An LLM API key for the managed LLM integration
-- Access to the managed Google OAuth service the login flow is built on
+- Node.js 18 or later, and Yarn 1.x
+- Python 3.11 or later
+- MongoDB running locally (or a MongoDB connection string)
+- An LLM API key for reply generation
 
-### 1. Backend
+### 1. Get the code
+
+```bash
+git clone <your-repository-url>
+cd replyrush
+```
+
+### 2. Start the backend
 
 ```bash
 cd backend
-python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+python -m venv venv
+source venv/bin/activate        # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
@@ -143,19 +160,22 @@ Create `backend/.env`:
 ```env
 MONGO_URL=mongodb://localhost:27017
 DB_NAME=replyrush
-LLM_API_KEY=your_llm_key_here
 CORS_ORIGINS=http://localhost:3000
+# Also add your LLM API key here, using the exact variable name read
+# near the top of backend/server.py (os.environ[...]).
 ```
 
-Start the server:
+Run the API:
 
 ```bash
-uvicorn server:app --host 0.0.0.0 --port 8001 --reload
+uvicorn server:app --reload --port 8001
 ```
 
-The API is now at `http://localhost:8001/api`.
+Check it at `http://localhost:8001/api/`. You should see `{"message": "ReplyRush API"}`.
 
-### 2. Frontend
+### 3. Start the frontend
+
+In a second terminal:
 
 ```bash
 cd frontend
@@ -168,7 +188,7 @@ Create `frontend/.env`:
 REACT_APP_BACKEND_URL=http://localhost:8001
 ```
 
-Start the app:
+Run the app:
 
 ```bash
 yarn start
@@ -176,50 +196,68 @@ yarn start
 
 Open `http://localhost:3000`.
 
-### 3. Try the demo flow
+### 4. Sign in
 
-1. Click **Get Started** and sign in with Google.
-2. On the dashboard, click **Connect** on Zomato and Google. The Issue Radar banner lights up because the sample data contains repeated delivery and staff complaints.
-3. Open a theme to see its reviews and suggested action.
-4. Open a red-flagged review, choose a business type and tone, leave "What can you actually offer?" empty, and click **Generate Reply**. Check that the reply invents no refund or contact details.
-5. Type an offer, click **Regenerate**, and confirm the reply uses only what you wrote.
-6. Open the Spanish and French reviews to see language matching.
-7. Open **History** to review every reply.
+**Google sign-in.** The Login page redirects to a hosted Google OAuth service and comes back to `/dashboard`. The session cookie is set as `Secure`, so this path is intended for an HTTPS deployment.
+
+**Local development sign-in (no Google needed).** Create a test user and session directly in the database:
+
+```bash
+mongosh --quiet --eval '
+const d = db.getSiblingDB("replyrush");
+const uid = "user_dev", tok = "dev_session_token";
+d.users.updateOne({user_id: uid}, {$set: {user_id: uid, email: "dev@example.com", name: "Dev Owner", picture: null, created_at: new Date().toISOString()}}, {upsert: true});
+d.user_sessions.updateOne({session_token: tok}, {$set: {user_id: uid, session_token: tok, expires_at: new Date(Date.now() + 7*24*60*60*1000).toISOString(), created_at: new Date().toISOString()}}, {upsert: true});
+'
+```
+
+Then open the app in your browser, open the developer console, and run:
+
+```js
+localStorage.setItem("rr_token", "dev_session_token");
+```
+
+Go to `http://localhost:3000/dashboard`. The frontend sends this token as a Bearer header, which the backend accepts.
+
+### 5. Try the main flow
+
+1. On the dashboard, click **Connect** on Zomato and Google.
+2. Watch the pulsing **Needs attention** banner appear, then click a theme to open its drawer.
+3. Open a red-flagged review, choose a business type and tone, and click **Generate Reply**.
+4. Edit the reply, then click **Copy Reply**.
+5. Open **History** to see the handled review.
+
+There is no separate seed command. Seed reviews are loaded per user the first time a platform is connected.
 
 ### Run the tests
+
+The backend tests call a running API, so keep the backend running first, then from the project root:
 
 ```bash
 cd backend
 pytest
 ```
 
-The tests call a running backend, so start the server first.
-
 ## Limitations
 
-- **Platform connections are simulated.** Connect loads 25 pre-seeded sample reviews (5 per platform). ReplyRush does not call the Google Business Profile, Zomato, Amazon, Yelp or Instagram APIs, which require business verification and app review.
-- **No auto-posting.** Replies are drafts. The owner copies them and posts manually.
-- **Seed dates are relative.** Sample reviews are dated relative to the moment of first Connect so the 30-day Issue Radar always has data. Real imported data would use real timestamps.
-- **Manual reviews are tagged by the LLM.** Themes and flags for pasted reviews depend on model judgment and can occasionally be off. The owner can still edit the reply, but cannot yet correct the flag or themes.
-- **Language field is not detected for manual reviews.** The stored language defaults to English, although the reply itself follows the review's language.
-- **Time saved is an estimate.** It assumes a flat 5 minutes per reply, not measured usage.
-- **Depends on managed services.** Sign-in and LLM access use hosted integrations. Running the app outside its original hosting environment requires those services or replacing them with your own OAuth setup and LLM client.
-- **Limited testing.** Backend routes have API tests. The frontend has no automated tests, and there is no rate limiting on LLM endpoints.
-- **English-first interface.** The UI is in English, and only replies adapt to the review's language.
+- **Connect is simulated.** It loads sample reviews from the app's own database. There is no live integration with Google Business Profile, Zomato, Amazon, Yelp or Instagram, since those need business verification and app review.
+- **Drafts only.** Replies are copied out by the owner. Nothing is posted back to any platform.
+- **Fixed sample data.** Each platform has 5 seeded reviews (25 total), and they are dated relative to the moment a platform is connected, so they always fall inside the 30-day Issue Radar window.
+- **Edits are not saved.** The owner can edit a reply before copying it, but the History page stores the reply as generated, not the edited version.
+- **Flags and themes come from an AI model.** They can occasionally be wrong, and seeded reviews keep their preset flags and themes rather than being re-classified.
+- **Time saved is an estimate.** It assumes 5 minutes per reply and is not measured.
+- **Single role.** Every user is a business owner. There are no teams, roles or admin views.
+- **Internet and LLM key required.** Reply generation and theme suggestions need network access to the LLM. Generation retries once and then shows an error.
+- **Google sign-in needs HTTPS.** The secure session cookie means local testing normally uses the development sign-in described above.
 
 ## Future Scope
 
-- **Real platform integrations** for Google Business Profile, Yelp and others, with an approval flow before any reply is posted.
-- **Owner-editable flags and themes**, with corrections fed back to improve tagging.
-- **Reply presets**, so a business saves its preferred tone, business type and standard offers.
-- **Sentiment trends over time**, showing whether complaints are rising or falling week by week.
-- **Weekly Issue Radar email digest** with the top complaint themes.
-- **Reply quality checks** that flag drafts which are too long, too generic, or that mention anything not authorised by the owner.
-- **Multi-location and team access** with roles, for businesses with several branches or staff.
-- **Localised interface** so owners can use the app in their own language.
-- **Automatic language detection** for manually added reviews.
-- **Frontend test suite and rate limiting** for production readiness.
-
-## License
-
-Add your preferred license here (for example, MIT).
+- **Real platform connections** through official APIs once business verification and app review are in place.
+- **Reply presets** so owners can save their favourite tone and offer and start every reply pre-filled.
+- **Saved edits** so History keeps the version the owner actually used.
+- **Sentiment trends** showing positive vs negative over the past weeks on the dashboard.
+- **Reply confidence** with a quality score and word-count fit before copying.
+- **Weekly Issue Radar digest** emailed to the owner so problems are caught before they pile up.
+- **Multi-location and team support** with roles, so several staff can share one workspace.
+- **Localized interface** in more languages, beyond the reply language matching that already exists.
+- **Richer analytics** such as response-time tracking and per-review status labels.
