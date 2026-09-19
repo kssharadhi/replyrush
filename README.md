@@ -196,6 +196,3 @@ To try the app end to end:
 - Weekly email digest of top complaint themes
 - Sentiment trends over time
 
-## License
-
-Add your preferred license here.
