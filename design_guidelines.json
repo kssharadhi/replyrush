@@ -1,0 +1,175 @@
+{
+  "project_name": "ReplyRush",
+  "app_type": "saas_app",
+  "theme": {
+    "mode": "light",
+    "background": "bg-slate-50",
+    "surface": "bg-white",
+    "gradient_hero": "bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500",
+    "gradient_accent": "bg-gradient-to-r from-violet-600 to-indigo-600",
+    "gradient_card_light": "bg-gradient-to-br from-white via-indigo-50/30 to-purple-50/20"
+  },
+  "colors": {
+    "primary": "#4F46E5",
+    "primary_hover": "#4338CA",
+    "text_main": "#0F172A",
+    "text_muted": "#64748B",
+    "border_subtle": "#E2E8F0",
+    "urgency": {
+      "red": {
+        "hex": "#EF4444",
+        "bg": "bg-red-50",
+        "text": "text-red-700",
+        "border": "border-red-200",
+        "dot": "bg-red-500",
+        "label": "High Urgency (Needs Action)"
+      },
+      "yellow": {
+        "hex": "#F59E0B",
+        "bg": "bg-amber-50",
+        "text": "text-amber-700",
+        "border": "border-amber-200",
+        "dot": "bg-amber-500",
+        "label": "Medium Urgency (Moderate)"
+      },
+      "green": {
+        "hex": "#10B981",
+        "bg": "bg-emerald-50",
+        "text": "text-emerald-700",
+        "border": "border-emerald-200",
+        "dot": "bg-emerald-500",
+        "label": "Low Urgency (Positive)"
+      }
+    },
+    "platforms": {
+      "google": {
+        "color": "#4285F4",
+        "bg": "bg-blue-50",
+        "text": "text-blue-600",
+        "border": "border-blue-200",
+        "icon_component": "SiGoogle"
+      },
+      "zomato": {
+        "color": "#CB202D",
+        "bg": "bg-red-50",
+        "text": "text-red-600",
+        "border": "border-red-200",
+        "icon_component": "SiZomato"
+      },
+      "amazon": {
+        "color": "#FF9900",
+        "bg": "bg-amber-50",
+        "text": "text-amber-700",
+        "border": "border-amber-200",
+        "icon_component": "SiAmazon"
+      },
+      "yelp": {
+        "color": "#D32323",
+        "bg": "bg-rose-50",
+        "text": "text-rose-700",
+        "border": "border-rose-200",
+        "icon_component": "SiYelp"
+      },
+      "instagram": {
+        "color": "#E4405F",
+        "bg": "bg-pink-50",
+        "text": "text-pink-600",
+        "border": "border-pink-200",
+        "icon_component": "SiInstagram"
+      }
+    }
+  },
+  "typography": {
+    "heading_font": "Outfit, Plus Jakarta Sans, sans-serif",
+    "body_font": "Inter, DM Sans, sans-serif",
+    "h1_hero": "text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight",
+    "h2_section": "text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900",
+    "h3_card": "text-lg sm:text-xl font-semibold text-slate-900",
+    "body": "text-base text-slate-600 leading-relaxed",
+    "caption": "text-xs font-medium text-slate-400 uppercase tracking-wider"
+  },
+  "pages_and_features": [
+    {
+      "name": "Landing Page",
+      "route": "/",
+      "elements": [
+        "Navigation bar with logo 'ReplyRush', links (Features, Issue Radar, Pricing), and 'Sign In' CTA button",
+        "Animated gradient hero with heading 'Never leave a review unanswered again'",
+        "3-Step Visual Process: 1. Connect Accounts, 2. AI Drafts Personalized Reply, 3. One-Click Copy",
+        "Interactive Mock Preview Card showing real-time review with simulated typing AI reply",
+        "Get Started CTA button leading to Login/Dashboard",
+        "Social proof badges and platform icons marquee"
+      ]
+    },
+    {
+      "name": "Login Page",
+      "route": "/login",
+      "elements": [
+        "Centered glassy backdrop card (backdrop-blur-xl bg-white/80 shadow-2xl border border-white/50)",
+        "ReplyRush Logo + Tagline 'AI review & complaint assistant for local business owners'",
+        "White 'Sign in with Google' button with official multi-color G logo icon",
+        "Subtle animated vibrant gradient background layer",
+        "Demo quick-login bypass button for testing ease"
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "route": "/dashboard",
+      "elements": [
+        "Analytics Widget: Total Reviews Handled (animated counter), % Positive vs Negative Donut Chart (Recharts), Estimated Time Saved (e.g. '18.5 hrs')",
+        "Urgency Chips Filter bar (Red / Yellow / Green badges)",
+        "ISSUE RADAR Panel: Horizontal theme bars split by platform logo & trend arrows, pulsing 'Needs Attention' banner, side drawer with matching reviews + 1 suggested action",
+        "Five Platform Connection Cards: Google, Zomato, Amazon, Yelp, Instagram with platform brand colors, connection status, and 'Connect' / 'Manage' button"
+      ]
+    },
+    {
+      "name": "Connect Flow",
+      "route": "/connect",
+      "elements": [
+        "2-second simulated loading state with animated progress spinner & status text 'Fetching your latest reviews...'",
+        "Revealed seeded review cards styled with platform brand badges, star ratings, reviewer name, date, text, and urgency flag dot",
+        "Sorting logic: Red (High Urgency) items sort to top, followed by Yellow (Medium), then Green (Low)"
+      ]
+    },
+    {
+      "name": "Reply Studio",
+      "route": "/reply-studio",
+      "elements": [
+        "Business Type selector dropdown (Cafe, Restaurant, Salon, Retail, Dental, Hotel, etc.)",
+        "Tone selector pill buttons (Empathetic, Professional, Casual, Apologetic & Solution, Enthusiastic)",
+        "'What can you actually offer?' text input (e.g., '10% discount on next visit', 'Free espresso', 'Manager call')",
+        "Generate Reply button with sparkles icon",
+        "Editable response textarea with live word counter and tone indicator",
+        "Action buttons: Copy Reply (with Sonner toast notification), Regenerate button, and Direct Mark as Replied button"
+      ]
+    },
+    {
+      "name": "History Page",
+      "route": "/history",
+      "elements": [
+        "Structured table / list rows displaying platform logo, urgency flag color tag, review snippet, generated reply preview, date timestamp",
+        "Filterable controls by Platform (All, Google, Zomato, Amazon, Yelp, Instagram) and Urgency Flag (Red, Yellow, Green)",
+        "Search bar for keyword filtering within customer reviews and AI replies"
+      ]
+    }
+  ],
+  "image_urls": {
+    "cafe_avatar_1": "https://images.unsplash.com/photo-1578297690968-3938dd442128?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHwzfHxjYWZlJTIwcmVzdGF1cmFudCUyMGN1c3RvbWVyJTIwYXZhdGFyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzg5ODE1NDE3fDA&ixlib=rb-4.1.0&q=85",
+    "cafe_avatar_2": "https://images.unsplash.com/photo-1560264214-af17accb8456?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA3MDR8MHwxfHNlYXJjaHwyfHxjYWZlJTIwcmVzdGF1cmFudCUyMGN1c3RvbWVyJTIwYXZhdGFyJTIwcG9ydHJhaXR8ZW58MHx8fHwxNzg5ODE1NDE3fDA&ixlib=rb-4.1.0&q=85",
+    "barista_portrait": "https://images.pexels.com/photos/2101154/pexels-photo-2101154.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+  },
+  "motion_and_animations": {
+    "library": "framer-motion",
+    "hero_gradient": "animate-gradient bg-[length:200%_200%]",
+    "card_hover": "hover:-translate-y-1 hover:shadow-xl transition-all duration-300 ease-out",
+    "pulse_banner": "animate-pulse",
+    "page_transition": "initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.25 }}"
+  },
+  "instructions_to_main_agent": [
+    "Ensure all interactive buttons, inputs, links, and cards include data-testid attributes (e.g., data-testid='connect-google-btn', data-testid='generate-reply-btn').",
+    "Use react-icons/si (SiGoogle, SiZomato, SiAmazon, SiYelp, SiInstagram) for all platform logos and render them in their exact brand colors.",
+    "Strictly maintain red, yellow, and green urgency color coding throughout the dashboard, connect flow, reply studio, and history list.",
+    "Use sonner for instant toast feedback when actions like 'Copy Reply', 'Connect Platform', or 'Save Settings' take place.",
+    "Implement smooth Framer Motion page transitions and card hover lift interactions across all 5 main pages."
+  ]
+}
